@@ -26,7 +26,7 @@ public class CalendarManager: ObservableObject {
     
     
     /// Инициализирует новый экземпляр `CalendarManager`.
-    init(
+    public init(
         calendar: Calendar = .current,
         minimumDate: Date,
         maximumDate: Date,
