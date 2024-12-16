@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct DPViewController: View {
+public struct DPViewController: View {
     
     @ObservedObject var calendarManager: CalendarManager
     @Environment(\.presentationMode) var presentationMode
     
-    var body: some View {
+    public var body: some View {
         Group {
             NavigationView {
                 CalendarPicker()

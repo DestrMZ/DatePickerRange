@@ -8,7 +8,7 @@
 import Foundation
 
 /// Управляет состоянием календаря и конфигурацией для пользовательского выбора дат.
-class CalendarManager: ObservableObject {
+public class CalendarManager: ObservableObject {
     
     @Published var startDate: Date? /// Начальная дата выбранного пользователем диапазона.
     @Published var endDate: Date? /// Конечная дата выбранного пользователем диапазона.
