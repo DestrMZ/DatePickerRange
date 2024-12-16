@@ -9,7 +9,7 @@ import SwiftUI
 
 public struct DPViewController: View {
     
-    @ObservedObject var calendarManager: CalendarManager
+    @ObservedObject public var calendarManager: CalendarManager
     @Environment(\.presentationMode) var presentationMode
     
     public var body: some View {
