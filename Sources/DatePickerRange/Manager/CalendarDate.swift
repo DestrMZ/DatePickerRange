@@ -3,22 +3,32 @@
 //  CustomDatePickerRange
 //
 //  Created by Ivan Maslennikov on 07.12.2024.
-
+//
 
 import SwiftUI
 
-
+/// Represents a single calendar cell (date) with its associated properties and appearance configurations.
 struct CalendarDate {
     
-    var date: Date /// Дата, связанная с этой ячейкой календаря.
-    var calendarManager: CalendarManager /// Менеджер календаря, предоставляющий конфигурацию и состояние.
+    // MARK: - Properties
     
-    var isDisabled: Bool = false /// Указывает, является ли дата недоступной для выбора.
-    var isToday: Bool = false /// Указывает, является ли дата сегодняшней.
-    var isSelected: Bool = false /// Указывает, выбрана ли эта дата.
-    var isBetweenStartAndEnd: Bool = false /// Указывает, находится ли дата между начальной и конечной датами диапазона.
-
+    var date: Date /// The date associated with this calendar cell.
+    var calendarManager: CalendarManager /// The calendar manager providing configurations and state for the calendar.
+    var isDisabled: Bool = false /// Indicates whether the date is disabled and cannot be selected.
+    var isToday: Bool = false /// Indicates whether the date is today's date.
+    var isSelected: Bool = false /// Indicates whether the date is selected.
+    var isBetweenStartAndEnd: Bool = false /// Indicates whether the date lies between the start and end dates of the range.
     
+    // MARK: - Initialization
+    
+    /// Initializes a `CalendarDate` instance with specific state properties.
+    /// - Parameters:
+    ///   - date: The date represented by this calendar cell.
+    ///   - manager: The `CalendarManager` instance managing configurations and state.
+    ///   - isDisabled: A Boolean indicating whether the date is disabled. Default is `false`.
+    ///   - isToday: A Boolean indicating whether the date is today's date. Default is `false`.
+    ///   - isSelected: A Boolean indicating whether the date is selected. Default is `false`.
+    ///   - isBetweenStartAndEnd: A Boolean indicating whether the date is part of the selected range. Default is `false`.
     init(
         date: Date,
         manager: CalendarManager,
@@ -35,12 +45,16 @@ struct CalendarDate {
         self.isBetweenStartAndEnd = isBetweenStartAndEnd
     }
     
-    /// Возвращает текстовое представление даты.
+    // MARK: - Methods
+    
+    /// Returns a formatted text representation of the date (day of the month).
+    /// - Returns: A `String` representing the day of the month.
     func getText() -> String {
         formatDate(date: date)
     }
     
-    /// Определяет цвет текста в зависимости от состояния даты.
+    /// Determines the text color based on the date's state.
+    /// - Returns: A `Color` representing the text color.
     func getTextColor() -> Color {
         if isDisabled {
             return calendarManager.colors.disabledColor
@@ -49,12 +63,13 @@ struct CalendarDate {
         } else if isToday {
             return calendarManager.colors.todayColor
         } else if isBetweenStartAndEnd {
-            return calendarManager.colors.betweenStartAndEndColor //
+            return calendarManager.colors.betweenStartAndEndColor
         }
         return calendarManager.colors.textColor
     }
 
-    /// Определяет цвет фона в зависимости от состояния даты.
+    /// Determines the background color based on the date's state.
+    /// - Returns: A `Color` representing the background color.
     func getBackgroundColor() -> Color {
         if isBetweenStartAndEnd {
             return calendarManager.colors.betweenStartAndEndBackColor
@@ -66,7 +81,8 @@ struct CalendarDate {
         return calendarManager.colors.textBackColor
     }
     
-    /// Определяет шрифт в зависимости от состояния даты.
+    /// Determines the font style based on the date's state.
+    /// - Returns: A `Font` representing the text font.
     var font: Font {
         if isDisabled {
             return calendarManager.fonts.cellDisabledFont
@@ -79,7 +95,10 @@ struct CalendarDate {
         }
         return calendarManager.fonts.cellUnselectedFont
     }
-
+    
+    /// Formats the given date into a string representation with medium style (e.g., Dec 7, 2024).
+    /// - Parameter date: The date to format.
+    /// - Returns: A `String` representation of the formatted date.
     func stringFormatDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -87,6 +106,9 @@ struct CalendarDate {
         return dateFormatter.string(from: date)
     }
 
+    /// Formats the given date to display only the day of the month.
+    /// - Parameter date: The date to format.
+    /// - Returns: A `String` representing the day of the month.
     func formatDate(date: Date) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "d"

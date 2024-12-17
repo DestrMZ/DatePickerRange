@@ -8,13 +8,18 @@
 import Foundation
 import SwiftUI
 
-/// Отображает ячейку календаря с учетом стилей и состояния.
+/// A view that represents a single calendar day cell with styles and states based on the provided date attributes.
+///
+/// This view is used to display a day in the calendar with different styling based on whether the date is selected, today, disabled, or part of a date range.
 struct DayCell: View {
     
+    /// The `CalendarDate` object representing the date for this cell.
     var calendarDate: CalendarDate
+    
+    /// The width of the cell, typically used to define its size.
     var cellWidth: CGFloat
     
-    /// Радиус закругления углов ячейки.
+    /// The corner radius for rounding the edges of the cell. Default is 32.
     var radius: CGFloat = 32
     
     var body: some View {
@@ -30,7 +35,6 @@ struct DayCell: View {
     }
 }
 
-
 #Preview {
     Group {
         DayCell(
@@ -39,7 +43,7 @@ struct DayCell: View {
                 manager: CalendarManager(
                     calendar: Calendar.current,
                     minimumDate: Date(),
-                    maximumDate: Date().addingTimeInterval(60 * 60 * 24 * 365),
+                    maximumDate: Date().addingTimeInterval(60 * 60 * 24 * 365),  // One year from now
                     isFutureSelectionEnabled: false
                 ),
                 isDisabled: false,
@@ -49,6 +53,8 @@ struct DayCell: View {
             ),
             cellWidth: 32
         )
+        
+        /// A preview of the DayCell for today's date
         DayCell(
             calendarDate: CalendarDate(
                 date: Date(),
@@ -67,5 +73,3 @@ struct DayCell: View {
         )
     }
 }
-
-

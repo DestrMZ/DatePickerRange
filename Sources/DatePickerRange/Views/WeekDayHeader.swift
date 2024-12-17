@@ -7,8 +7,10 @@
 
 import SwiftUI
 
+/// A view displaying the weekday header for the calendar.
 struct WeekDayHeader: View {
     
+    // Environment object for managing the calendar settings.
     @EnvironmentObject var calendarManager: CalendarManager
     
     var body: some View {
@@ -16,6 +18,7 @@ struct WeekDayHeader: View {
             WeekdayHeaderView()
                 .padding(.horizontal)
                 .padding(.top)
+            
             Divider()
         }
     }
@@ -23,8 +26,8 @@ struct WeekDayHeader: View {
 
 #Preview {
     let calendarManager = CalendarManager(
-        minimumDate: Date().addingTimeInterval(-60 * 60 * 24 * 30 * 2),
-        maximumDate: Date().addingTimeInterval(60 * 60 * 24 * 30 * 2),
+        minimumDate: Date().addingTimeInterval(-60 * 60 * 24 * 30 * 2), // Two months ago.
+        maximumDate: Date().addingTimeInterval(60 * 60 * 24 * 30 * 2), // Two months ahead.
         isFutureSelectionEnabled: false
     )
     

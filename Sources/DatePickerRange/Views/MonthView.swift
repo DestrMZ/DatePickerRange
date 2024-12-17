@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+/// A view displaying a calendar month.
 struct MonthView: View {
     
     @EnvironmentObject var calendarManager: CalendarManager
@@ -17,22 +18,20 @@ struct MonthView: View {
     let daysPerWeek = 7
     let cellWidth = CGFloat(32)
     
-    /// Набор компонентов для извлечения компонентов даты (год, месяц, день)
+    /// A set of date components used to extract year, month, and day components.
     let calendarUnitYMD: Set<Calendar.Component> = [.year, .month, .day]
     
-     var monthsArray: [[Date]] {
-        monthArray()  // Массив дат для месяца, создается с помощью метода monthArray
+    var monthsArray: [[Date]] {
+        monthArray()  // Array of dates for the month, created using the monthArray method.
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Header month
             Text(getMonthHeader())
                 .font(calendarManager.fonts.monthHeaderFont)
                 .foregroundColor(calendarManager.colors.monthHeaderColor)
                 .padding(.leading)
             
-            // Ячейки календаря
             VStack(alignment: .leading, spacing: 5) {
                 ForEach(monthsArray, id: \.self) { row in
                     HStack(spacing: 0) {
@@ -49,8 +48,8 @@ struct MonthView: View {
 
 #Preview {
     let calendarManager = CalendarManager(
-        minimumDate: Date().addingTimeInterval(-60 * 60 * 24 * 30 * 2),  // Два месяца назад
-        maximumDate: Date().addingTimeInterval(60 * 60 * 24 * 30 * 2),  // Два месяца вперед
+        minimumDate: Date().addingTimeInterval(-60 * 60 * 24 * 30 * 2),  // Two months ago
+        maximumDate: Date().addingTimeInterval(60 * 60 * 24 * 30 * 2),  // Two months ahead
         isFutureSelectionEnabled: false
     )
     
@@ -60,7 +59,7 @@ struct MonthView: View {
 
 extension MonthView {
     
-    /// Отображает ячейку для указанной даты
+    /// Displays a cell for a given date.
     func cellView(for date: Date) -> some View {
         if isThisMonth(date: date) {
             let isDateEnabled = isEnabled(date: date)
@@ -76,7 +75,7 @@ extension MonthView {
                     ),
                     cellWidth: cellWidth
                 )
-                .foregroundColor(isDateEnabled ? .primary : .gray) // Выделение недоступных дат
+                .foregroundColor(isDateEnabled ? .primary : .gray)
                 .onTapGesture {
                     if isDateEnabled {
                         dateTapped(date: date)
@@ -91,46 +90,46 @@ extension MonthView {
         }
     }
     
-    // Проверяет, является ли текущая дата месяцем
+    // Checks if the given date is in the current month.
     func isThisMonth(date: Date) -> Bool {
         return calendarManager.calendar.isDate(date, equalTo: firstOfMonthOffset(), toGranularity: .month)
     }
     
-    // Получает первую дату месяца
+    // Returns the first date of the current month.
     func firstDateMonth() -> Date {
         var components = calendarManager.calendar.dateComponents(calendarUnitYMD, from: calendarManager.minimumDate)
-        components.day = 1  // Устанавливаем первый день месяца
+        components.day = 1  // Set the day to the 1st
         return calendarManager.calendar.date(from: components)!
     }
     
-    // Получает первую дату месяца с учетом смещения
+    // Returns the first date of the month with the given offset.
     func firstOfMonthOffset() -> Date {
         var offset = DateComponents()
-        offset.month = monthOffset  // Применяем смещение для текущего месяца
+        offset.month = monthOffset  // Apply the month offset
         return calendarManager.calendar.date(byAdding: offset, to: firstDateMonth())!
     }
     
-    // Форматирует дату, исключая день, чтобы получить только год и месяц
+    // Formats the date, excluding the day, to get only the year and month.
     func formatDate(date: Date) -> Date {
         let components = calendarManager.calendar.dateComponents(calendarUnitYMD, from: date)
         return calendarManager.calendar.date(from: components)!
     }
     
-    // Сравнивает дату с эталонной
+    // Compares the given date with a reference date.
     func formatAndCompareDate(date: Date, referenceDate: Date) -> Bool {
         let refDate = formatDate(date: referenceDate)
         let clampedDate = formatDate(date: date)
         return refDate == clampedDate
     }
     
-    // Возвращает количество дней в месяцах между двумя датами
+    // Returns the number of days in the month for the given offset.
     func numberOfDays(offset: Int) -> Int {
-        let firstOfMonth = firstOfMonthOffset() // Получаем первую дату месяца с учетом смещения
-        let rangeOfWeeks = calendarManager.calendar.range(of: .weekOfMonth, in: .month, for: firstOfMonth)  // Определяем диапазон недель месяца
-        return (rangeOfWeeks?.count)! * daysPerWeek // Возвращаем количество дней в месяце
+        let firstOfMonth = firstOfMonthOffset()  // Get the first date of the month
+        let rangeOfWeeks = calendarManager.calendar.range(of: .weekOfMonth, in: .month, for: firstOfMonth)  // Get the month’s week range
+        return (rangeOfWeeks?.count)! * daysPerWeek  // Return the number of days in the month
     }
     
-    // Проверяет, является ли дата началом выбранного диапазона
+    // Checks if the date is the start of the selected range.
     func isStartDate(date: Date) -> Bool {
         if calendarManager.startDate == nil {
             return false
@@ -138,7 +137,7 @@ extension MonthView {
         return formatAndCompareDate(date: date, referenceDate: calendarManager.startDate ?? Date())
     }
     
-    // Проверяет, является ли дата концом выбранного диапазона
+    // Checks if the date is the end of the selected range.
     func isEndDate(date: Date) -> Bool {
         if calendarManager.endDate == nil {
             return false
@@ -146,7 +145,7 @@ extension MonthView {
         return formatAndCompareDate(date: date, referenceDate: calendarManager.endDate ?? Date())
     }
     
-    // Проверяет, лежит ли дата между началом и концом выбранного диапазона
+    // Checks if the date is between the start and end of the selected range.
     func isBeetweenStartAndEnd(date: Date) -> Bool {
         if calendarManager.startDate == nil || calendarManager.endDate == nil {
             return false
@@ -158,18 +157,18 @@ extension MonthView {
         return true
     }
     
-    // Проверяет, доступна ли дата для выбора (не меньше минимальной и не больше максимальной)
+    // Checks if the date is enabled (within the allowed range and respecting future/past selection).
     func isEnabled(date: Date) -> Bool {
         let clampedDate = formatDate(date: date)
         let today = Date()
 
-        // Проверка, что дата находится в пределах разрешённого диапазона
+        // Check if the date is within the allowed range
         if calendarManager.calendar.compare(clampedDate, to: calendarManager.minimumDate, toGranularity: .day) == .orderedAscending ||
             calendarManager.calendar.compare(clampedDate, to: calendarManager.maximumDate, toGranularity: .day) == .orderedDescending {
             return false
         }
 
-        // Проверка на будущее или прошлое в зависимости от флага
+        // Check if future or past selection is enabled
         if calendarManager.isFutureSelectionEnabled {
             return calendarManager.calendar.compare(clampedDate, to: today, toGranularity: .day) != .orderedAscending
         } else {
@@ -177,12 +176,12 @@ extension MonthView {
         }
     }
     
-    // Проверяет, является ли дата недоступной
+    // Checks if the date is one of the disabled dates.
     func isOneOfDisabledDates(date: Date) -> Bool {
-        return self.calendarManager.isSelectedDateDisabled(date: date) // Проверяем с помощью менеджера, доступна ли дата
+        return self.calendarManager.isSelectedDateDisabled(date: date) // Check if the date is disabled using the manager
     }
     
-    // Проверяет, если дата начала находится после даты конца, то возвращает false
+    // Checks if the start date is after the end date.
     func isStartDateAfterEndDate() -> Bool {
         if calendarManager.startDate == nil || calendarManager.endDate == nil {
             return false
@@ -192,17 +191,17 @@ extension MonthView {
         return true
     }
     
-    // Проверяет, является ли дата сегодняшним днем
+    // Checks if the date is today.
     func isToday(date: Date) -> Bool {
-        formatAndCompareDate(date: date, referenceDate: Date())  // Сравниваем с сегодняшней датой
+        formatAndCompareDate(date: date, referenceDate: Date())  // Compare with today's date
     }
     
-    // Проверяет, является ли дата специальной (например, выбранной пользователем)
+    // Checks if the date is special (e.g., selected by the user).
     func isSpecialDate(date: Date) -> Bool {
-        return isSelectedDate(date: date) || isStartDate(date: date) || isEndDate(date: date) // Проверяем, выбрана ли эта дата
+        return isSelectedDate(date: date) || isStartDate(date: date) || isEndDate(date: date) // Check if the date is selected
     }
     
-    // Проверяет, является ли дата выбранной пользователем
+    // Checks if the date is selected by the user.
     func isSelectedDate(date: Date) -> Bool {
         if calendarManager.startDate == nil {
             return false
@@ -210,24 +209,24 @@ extension MonthView {
         return formatAndCompareDate(date: date, referenceDate: calendarManager.startDate ?? Date())
     }
     
-    // Обрабатывает событие нажатия на дату
+    // Handles the date tap event.
     func dateTapped(date: Date) {
         if isEnabled(date: date) {
-            // Если и начальная, и конечная дата выбраны — сбросить их
+            // If both start and end dates are selected, reset them
             if calendarManager.startDate != nil && calendarManager.endDate != nil {
                 calendarManager.startDate = nil
                 calendarManager.endDate = nil
             }
             
-            // Если начальная дата не выбрана, установить её
+            // If the start date is not set, set it
             if calendarManager.startDate == nil {
                 calendarManager.startDate = date
                 calendarManager.endDate = nil
             } else {
-                // Установить конечную дату
+                // Set the end date
                 calendarManager.endDate = date
                 
-                // Если начальная дата больше конечной, сбросить обе
+                // If the start date is later than the end date, reset both
                 if isStartDateAfterEndDate() {
                     calendarManager.startDate = nil
                     calendarManager.endDate = nil
@@ -236,44 +235,43 @@ extension MonthView {
         }
     }
 
-    // Возвращает дату для конкретного индекса в месяце
+    // Returns the date at a specific index in the month.
     func getDateAtIndex(index: Int) -> Date {
-        let firstOfMonth = firstOfMonthOffset()  // Получаем первую дату месяца
+        let firstOfMonth = firstOfMonthOffset() 
         let weekday = calendarManager.calendar.component(.weekday, from: firstOfMonth)
         var startOffset = weekday - calendarManager.calendar.firstWeekday
         startOffset += startOffset >= 0 ? 0 : daysPerWeek
         
         var dateComponents = DateComponents()
-        dateComponents.day = index - startOffset  // Вычисляем смещение для текущей даты
+        dateComponents.day = index - startOffset
         
-        return calendarManager.calendar.date(byAdding: dateComponents, to: firstOfMonth)!  // Возвращаем полученную дату
+        return calendarManager.calendar.date(byAdding: dateComponents, to: firstOfMonth)!  // Return the calculated date
     }
     
-    // Создает и возвращает массив дат для всего месяца
+    // Creates and returns an array of dates for the entire month.
     func monthArray() -> [[Date]] {
-        var rowArray = [[Date]]()  // Массив строк, каждая строка — это неделя
+        var rowArray = [[Date]]()
         
-    
         for row in 0..<(numberOfDays(offset: monthOffset) / 7) {
-            var columbArray: [Date] = []  // Массив для одной недели
+            var columbArray: [Date] = []
             for column in 0...6 {
                 let index = (row * 7) + column
                 if index >= numberOfDays(offset: monthOffset) {
-                    break  // Прерываем, если индекс выходит за пределы месяца
+                    break
                 }
                 let date = self.getDateAtIndex(index: index)
-                columbArray.append(date)  // Добавляем в текущую неделю
+                columbArray.append(date)
             }
             if !columbArray.isEmpty {
-                rowArray.append(columbArray)  // Добавляем неделю в месяц, если она не пуста
+                rowArray.append(columbArray)
             }
         }
         return rowArray
     }
     
-    // Получает строку заголовка месяца
+    // Gets the header string for the month.
     func getMonthHeader() -> String {
-        Helper.getMonthHeader(date: firstOfMonthOffset())  // Используем вспомогательную функцию для получения строки месяца
+        Helper.getMonthHeader(date: firstOfMonthOffset())  // Use a helper function to get the month header string
     }
     
 }
