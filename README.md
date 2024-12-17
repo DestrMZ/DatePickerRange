@@ -28,12 +28,12 @@ To integrate `DatePickerRange` into your project using Swift Package Manager, fo
 
 Import the package into your SwiftUI view:
 
-```swift
+```swift 
 import DatePickerRange
 ```
 
 To start working with CalendarManager, you need to create an instance of it with the required parameters:
-```
+```swift 
 @StateObject var calendarManager = CalendarManager(
     minimumDate: Date(), // Set the minimum selectable date
     maximumDate: Date().addingTimeInterval(60 * 60 * 24 * 365), // Set the maximum selectable date (1 year from today)
@@ -44,12 +44,12 @@ To start working with CalendarManager, you need to create an instance of it with
 ## Track Selected Dates
 Using CalendarManager, you can get and update selected dates, for example, in your view.
 Example:
-```
+```swift 
 @State var startDate: Date? = nil
 @State var endDate: Date? = nil
 ```
 You can subscribe to changes to these dates using .onChange(of:) to automatically update the values ​​in your view:
-```
+```swift 
 DPViewController(calendarManager: calendarManager)
     .onChange(of: calendarManager.startDate) { newStartDate in
         startDate = newStartDate
@@ -61,7 +61,7 @@ DPViewController(calendarManager: calendarManager)
 
 ## Full example
 Here’s a full example using the package with bindings to your view:
-```
+```swift 
 import SwiftUI
 import DatePickerRange
 
