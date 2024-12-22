@@ -111,8 +111,7 @@ extension MonthView {
     
     // Formats the date, excluding the day, to get only the year and month.
     func formatDate(date: Date) -> Date {
-        let components = calendarManager.calendar.dateComponents(calendarUnitYMD, from: date)
-        return calendarManager.calendar.date(from: components)!
+        return calendarManager.normalizeDate(date: date)
     }
     
     // Compares the given date with a reference date.
@@ -212,21 +211,19 @@ extension MonthView {
     // Handles the date tap event.
     func dateTapped(date: Date) {
         if isEnabled(date: date) {
-            // If both start and end dates are selected, reset them
+            let normalizedDate = calendarManager.normalizeDate(date: date)
+            
             if calendarManager.startDate != nil && calendarManager.endDate != nil {
                 calendarManager.startDate = nil
                 calendarManager.endDate = nil
             }
             
-            // If the start date is not set, set it
             if calendarManager.startDate == nil {
-                calendarManager.startDate = date
+                calendarManager.startDate = normalizedDate
                 calendarManager.endDate = nil
             } else {
-                // Set the end date
-                calendarManager.endDate = date
+                calendarManager.endDate = normalizedDate
                 
-                // If the start date is later than the end date, reset both
                 if isStartDateAfterEndDate() {
                     calendarManager.startDate = nil
                     calendarManager.endDate = nil

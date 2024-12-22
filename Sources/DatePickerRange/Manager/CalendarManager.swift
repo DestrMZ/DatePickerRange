@@ -99,4 +99,16 @@ public class CalendarManager: ObservableObject {
             maximumDate = Date()
         }
     }
+    
+    /// Normalizes a given date to a consistent format, preserving only the year, month, and day components,
+    /// and adjusting the time to 12:00 PM in the current time zone.
+    ///
+    /// This method is useful when working with dates where only the day matters (e.g., in calendars),
+    /// avoiding issues caused by time zone differences or time-specific components.
+    public func normalizeDate(date: Date) -> Date {
+        var components = calendar.dateComponents([.year, .month, .day], from: date)
+        components.timeZone = TimeZone.current
+        components.hour = 12
+        return calendar.date(from: components) ?? Date()
+    }
 }
