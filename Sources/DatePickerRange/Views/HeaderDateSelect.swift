@@ -21,7 +21,7 @@ struct HeaderDateSelect: View {
             VStack(spacing: 5) {
                 HStack {
                     VStack {
-                        Text("Start date")
+                        Text(NSLocalizedString("Start date", comment: ""))
                             .foregroundColor(.secondary)
                             .font(.subheadline)
                         
@@ -31,7 +31,7 @@ struct HeaderDateSelect: View {
                     Spacer()
                     
                     VStack {
-                        Text("End date")
+                        Text(NSLocalizedString("End date", comment: ""))
                             .foregroundColor(.secondary)
                             .font(.subheadline)
                         

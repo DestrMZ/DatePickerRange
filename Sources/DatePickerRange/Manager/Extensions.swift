@@ -121,7 +121,7 @@ class Helper {
     /// - Returns: A formatted string or "Not selected" if the date is nil.
     static func formattedDate(_ date: Date?) -> String {
         guard let date = date else {
-            return "Not selected"
+            return NSLocalizedString("Not selected", comment: "")
         }
         return dateFormatter().string(from: date)
     }
